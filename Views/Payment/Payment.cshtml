@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: white;
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+ 
+
+        .order-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .order-header-name {
+            color: green;
+            font-weight: 600;
+            font-size: 34px;
+            margin-top: 50px;
+        }
+
+        .order-summary {
+            margin-top: 50px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid lightgrey;
+        }
+
+            .order-item img {
+                margin-right: 20px;
+            }
+
+        .order-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-item-price {
+            text-align: right;
+            font-family: "Manrope", system-ui;
+            color: black;
+            font-weight: 600;
+        }
+
+        .delivery-options {
+            margin-top: 30px;
+        }
+
+        .delivery-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+            .delivery-option.selected {
+                border-color: green;
+            }
+
+            .delivery-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+            .delivery-option label {
+                flex: 1;
+                cursor: pointer;
+                padding-left: 25px;
+                position: relative;
+            }
+
+            .delivery-option input[type="radio"]:checked + label {
+                color: green;
+                font-weight: bold;
+            }
+
+                .delivery-option input[type="radio"]:checked + label::before {
+                    content: '✔';
+                    color: green;
+                    position: absolute;
+                    left: 1px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+        .total-excl-vat {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-family: "Manrope", system-ui;
+        }
+
+        span {
+            font-weight: 100;
+        }
+
+        .spanSum {
+            font-weight: 600;
+            font-family: "Manrope", system-ui;
+        }
+
+        .total-excl-vat.line-after {
+            border-bottom: 1px solid grey;
+            padding-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 600;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 16px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+            }
+
+                .form-group input:focus {
+                    border-color: #27ae60;
+                    box-shadow: 0 0 8px rgba(39, 174, 96, 0.3);
+                    outline: none;
+                }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+            .form-row .form-group {
+                flex: 1;
+            }
+
+        .form-group.full-width {
+            flex: 2;
+        }
+
+        .submit-button {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+            .submit-button button {
+                padding: 10px 20px;
+                background-color: #27ae60;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .submit-button button:hover {
+                    background-color: #219150;
+                }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+        }
+
+            .footer button {
+                padding: 10px 20px;
+                background-color: #27ae60;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .footer button:hover {
+                    background-color: #219150;
+                }
+
+        .old-price {
+            text-decoration: line-through;
+            color: red;
+            font-family: "Manrope", system-ui;
+            font-weight: 600
+        }
+
+        .discount-price {
+            color: black;
+            font-weight: 600;
+            font-family: "Manrope", system-ui;
+        }
+
+        .delivery-options {
+            margin-top: 30px;
+        }
+
+        .delivery-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+            .delivery-option.selected {
+                border-color: green;
+            }
+
+            .delivery-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+            .delivery-option label {
+                flex: 1;
+                cursor: pointer;
+                padding-left: 25px;
+                position: relative;
+            }
+
+            .delivery-option input[type="radio"]:checked + label {
+                color: green;
+                font-weight: bold;
+            }
+
+                .delivery-option input[type="radio"]:checked + label::before {
+                    content: '✔';
+                    color: green;
+                    position: absolute;
+                    left: 1px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+        /* Hide the original radio buttons */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Style the labels as clickable rectangles */
+        .address-option {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+            text-align: center;
+        }
+
+        /* Highlight the selected option */
+        input[type="radio"]:checked + .address-option {
+            background-color: #d8eafd;
+            border-color: #007bff;
+        }
+
+        /* Add hover effect */
+        .address-option:hover {
+            background-color: #e8e8e8;
+        }
+
+    </style>
+</head>
+<body>
+    @model WebKontorExpert.Models.CheckoutViewModel
+    @{
+        ViewBag.Title = "Payment";
+        decimal totalAmountExclVAT = 0m; // Initialize total amount excluding VAT
+        decimal totalVAT = 0m; // Initialize total VAT
+    }
+
+    <div class="order-container">
+        <h1 class="order-header-name">Bestilling</h1>
+
+        <div class="order-summary">
+            @foreach (var item in Model.CartItems)
+            {
+                // Use a default value if item.Price is null
+                decimal priceInclVAT = item.Price ?? 0m; // Default to 0 if null
+                decimal vatRate = 0.25m; // VAT rate of 25%
+
+                // Calculate price excluding VAT
+                decimal priceExclVAT = priceInclVAT / (1 + vatRate);
+
+                // Calculate discount if available
+                decimal discountPercentage = item.Product.Discount ?? 0m;
+                decimal discountAmount = priceInclVAT * (discountPercentage / 100);
+                decimal discountPriceInclVAT = priceInclVAT - discountAmount;
+
+                // Calculate discounted price excluding VAT
+                decimal discountPriceExclVAT = discountPriceInclVAT / (1 + vatRate);
+                decimal totalDiscountPriceExclVAT = discountPriceExclVAT * item.Quantity;
+                decimal itemVAT = (discountPriceInclVAT - discountPriceExclVAT) * item.Quantity;
+
+                // Add to the total amount excluding VAT
+                totalAmountExclVAT += totalDiscountPriceExclVAT;
+                // Add to the total VAT
+                totalVAT += itemVAT;
+
+                <div class="order-item">
+                    <img src="@item.Product.MainImageUrl" alt="@item.Product.Name" style="width: 100px; height: auto;" />
+                    <div class="order-item-details">
+                        <div class="order-item-header">
+                            <p>@item.Product.Brand</p>
+                            <div class="order-item-price">
+                                @if (discountPercentage > 0)
+                                {
+                                    <span class="old-price">@String.Format("{0:F0}", priceExclVAT) kr.</span>
+                                    <span class="discount-price">@String.Format("{0:F0}", discountPriceExclVAT) kr. ekskl. moms</span>
+                                }
+                                else
+                                {
+                                    <span>@String.Format("{0:F0}", priceExclVAT) kr. ekskl. moms</span>
+                                }
+                            </div>
+
+                        </div>
+                        <p><strong>@item.Product.Name</strong></p>
+                        <p>Antal: @item.Quantity</p>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+
+        <h1 class="order-header-name">Levering</h1>
+        <p>Vælg om du vil få ordreren leveret, eller om du vil afhente det.</p>
+        <div class="delivery-options">
+            <div class="delivery-option">
+                <input type="radio" id="pickup" name="delivery" value="pickup">
+                <label for="pickup">Afhentning hos KontorXpert (Smedegade 99, Slagelse 4200)</label>
+            </div>
+            <div class="delivery-option">
+                <input type="radio" id="curbside" name="delivery" value="curbside">
+                <label for="curbside">Kantstenlevering - 600 kr. ekskl. moms</label>
+            </div>
+        </div>
+
+        <div class="total-excl-vat">
+            <span>Totalt beløb eksl moms</span>
+            <span id="total-amount">@String.Format("{0:F0}", totalAmountExclVAT) kr.</span>
+        </div>
+
+        <div class="total-excl-vat">
+            <span>Fragt ekskl moms</span>
+            <span id="delivery-cost">0 kr.</span>
+        </div>
+
+        <div class="total-excl-vat line-after">
+            <span>Moms</span>
+            <span id="vat-total">@String.Format("{0:F0}", totalVAT) kr.</span>
+        </div>
+
+        <div class="total-excl-vat">
+            <span class="spanSum">Total beløb inkl moms</span>
+            <span class="spanSum" id="total-amount-incl-vat">@String.Format("{0:F0}", totalAmountExclVAT + totalVAT) kr.</span>
+        </div>
+
+        <h1 class="order-header-name">Fakturaoplysninger</h1>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" required>
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="address">Husnummer & Gade</label>
+            <input type="text" id="address" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="city">By</label>
+                <input type="text" id="city" required>
+            </div>
+            <div class="form-group">
+                <label for="zip">Postnummer</label>
+                <input type="text" id="zip" required>
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="country">Land</label>
+            <input type="text" id="country" required>
+        </div>
+
+        <!-- Radio buttons for delivery address options -->
+        <div id="delivery-address-options">
+            <div class="form-group">
+                <input type="radio" id="same-address" name="delivery-address" value="same" checked>
+                <label for="same-address" class="address-option">Leveringsaddresse er samme som i faktura</label>
+            </div>
+            <div class="form-group">
+                <input type="radio" id="different-address" name="delivery-address" value="different">
+                <label for="different-address" class="address-option">En anden leveringsaddresse</label>
+            </div>
+        </div>
+
+        <!-- Delivery address form -->
+        <div id="delivery-address-form" class="hidden">
+            <h1 class="order-header-name">Leveringsoplysninger</h1>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="delivery-phone">Telefon</label>
+                    <input type="tel" id="delivery-phone">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="delivery-address">Husnummer & Gade</label>
+                <input type="text" id="delivery-address">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="delivery-city">By</label>
+                    <input type="text" id="delivery-city">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-zip">Postnummer</label>
+                    <input type="text" id="delivery-zip">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="delivery-country">Land</label>
+                <input type="text" id="delivery-country">
+            </div>
+        </div>
+
+        <div class="footer">
+            <input type="checkbox" id="Subscribe" name="Subscribe">
+            <label for="Subscribe">Ja tak, jeg vil gerne modtage gode tilbud og nyheder fra KontorXpert</label>
+            <br /> <br />
+            <input type="checkbox" id="AcceptTerms" name="AcceptTerms">
+            <label for="AcceptTerms">Jeg har læst og accepterer webshoppen's vilkår og betingelser</label>
+            <br />
+            <button type="submit" class="submit-button" id="checkout-button">Gennemfør køb</button>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('@ViewBag.PublishableKey');
+
+        var checkoutButton = document.getElementById('checkout-button');
+
+        checkoutButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch('/Payment/CreateSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (sessionId) {
+                    return stripe.redirectToCheckout({ sessionId: sessionId.id });
+                })
+                .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                });
+        });
+
+
+
+
+
+
+
+
+        var totalVAT = @Html.Raw(totalVAT.ToString("0.00").Replace(',', '.'));
+        var totalAmountExclVAT = @Html.Raw(totalAmountExclVAT.ToString("0.00").Replace(',', '.'));
+
+        document.querySelectorAll('.delivery-option input[type="radio"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                document.querySelectorAll('.delivery-option').forEach(function (option) {
+                    option.classList.remove('selected');
+                });
+                if (radio.checked) {
+                    radio.parentElement.classList.add('selected');
+                    updateDeliveryCostAndVAT(radio.value);
+                    toggleDeliveryAddressOptions(radio.value);
+                }
+            });
+        });
+
+        function updateDeliveryCostAndVAT(deliveryOption) {
+            var deliveryCostElement = document.getElementById('delivery-cost');
+            var vatTotalElement = document.getElementById('vat-total');
+            var totalAmountInclVATElement = document.getElementById('total-amount-incl-vat');
+            var deliveryCost = 0;
+            var deliveryVAT = 0;
+
+            if (deliveryOption === 'curbside') {
+                deliveryCost = 600;
+                deliveryVAT = deliveryCost * 0.25;
+                deliveryCostElement.textContent = deliveryCost.toFixed(2) + ' kr.';
+            } else {
+                deliveryCostElement.textContent = '0 kr.';
+            }
+
+            var newTotalVAT = totalVAT + deliveryVAT;
+            vatTotalElement.textContent = newTotalVAT.toFixed(2) + ' kr.';
+
+            var newTotalAmountInclVAT = totalAmountExclVAT + deliveryCost + newTotalVAT;
+            totalAmountInclVATElement.textContent = newTotalAmountInclVAT.toFixed(2) + ' kr.';
+        }
+
+        function toggleDeliveryAddressOptions(deliveryOption) {
+            var deliveryAddressOptions = document.getElementById('delivery-address-options');
+            var deliveryAddressForm = document.getElementById('delivery-address-form');
+            if (deliveryOption === 'curbside') {
+                deliveryAddressOptions.classList.remove('hidden');
+            } else {
+                deliveryAddressOptions.classList.add('hidden');
+                deliveryAddressForm.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('same-address').addEventListener('change', function () {
+            document.getElementById('delivery-address-form').classList.add('hidden');
+        });
+
+        document.getElementById('different-address').addEventListener('change', function () {
+            document.getElementById('delivery-address-form').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

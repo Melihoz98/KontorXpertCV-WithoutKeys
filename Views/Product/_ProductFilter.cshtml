@@ -1,0 +1,117 @@
+﻿<head>
+    <link rel="stylesheet" href="~/css/ProductStyle.css" />
+    <script src="~/js/productCardScript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</head>
+<div class="container filter-container">
+    <div class="card">
+        <div class="card-body">
+            <!-- Price Section -->
+            <div class="filter-section">
+                <h5 data-bs-toggle="collapse" href="#priceFilter" role="button" aria-expanded="false" aria-controls="priceFilter"  class="product-filter-h">
+                    Pris
+                </h5>
+                <div class="collapse" id="priceFilter">
+                    <input type="range" class="form-range" id="priceRange" min="@ViewBag.MinPrice" max="@ViewBag.MaxPrice" oninput="updatePriceFilter(this.value)">
+                    <p>Mellem: <span id="priceRangeValue">@ViewBag.MinPrice</span> kr. - @ViewBag.MaxPrice kr.</p>
+                </div>
+            </div>
+            <hr>
+
+            <!-- Brand Section -->
+            <div class="filter-section">
+                <h5 class="product-filter-h" data-bs-toggle=" collapse" href="#brandFilter" role="button" aria-expanded="false" aria-controls="brandFilter">
+                    Mærke
+                </h5>
+                <div class="collapse" id="brandFilter">
+                    @foreach (var brand in ViewBag.Brands)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="@brand" id="brand-@brand" onchange="filterProducts()">
+                            <label class="form-check-label" for="brand-@brand">@brand</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <hr>
+
+            <!-- Color Section -->
+            <div class="filter-section">
+                <h5 class="product-filter-h" data-bs-toggle="collapse" href="#colorFilter" role="button" aria-expanded="false" aria-controls="colorFilter">
+                    Farve
+                </h5>
+                <div class="collapse" id="colorFilter">
+                    @foreach (var color in ViewBag.Colors)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="@color" id="color-@color" onchange="filterProducts()">
+                            <label class="form-check-label" for="color-@color">@color</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <hr>
+
+            <!-- Condition Section -->
+            <div class="filter-section">
+                <h5 class="product-filter-h" data-bs-toggle="collapse" href="#conditionFilter" role="button" aria-expanded="false" aria-controls="conditionFilter">
+                    Tilstand
+                </h5>
+                <div class="collapse" id="conditionFilter">
+                    @foreach (var condition in ViewBag.Conditions)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="@condition" id="condition-@condition" onchange="filterProducts()">
+                            <label class="form-check-label" for="condition-@condition">@condition</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <hr>
+            <!-- Antal Section -->
+<div class="filter-section">
+                <h5 class="product-filter-h" data-bs-toggle="collapse" href="#antalFilter" role="button" aria-expanded="false" aria-controls="antalFilter">
+        Antal
+    </h5>
+    <div class="collapse" id="antalFilter">
+        <input type="range" class="form-range" id="antalRange" min="@ViewBag.MinAntal" max="@ViewBag.MaxAntal" oninput="updateAntalFilter(this.value)">
+        <p>Mellem: <span id="antalRangeValue">@ViewBag.MinAntal</span> stk. - @ViewBag.MaxAntal stk.</p>
+    </div>
+</div>
+<hr>
+
+            <!-- Customize Selection -->
+            <div class="filter-section">
+                <h5 class="product-filter-h" data-bs-toggle="collapse" href="#customSelection" role="button" aria-expanded="false" aria-controls="customSelection">
+                    Tilpas udvalg
+                </h5>
+                <div class="collapse" id="customSelection">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="offersOnly" onchange="filterProducts()">
+                        <label  class="form-check-label" for="offersOnly">
+                            Vis kun tilbudsvarer
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inStockOnly" onchange="filterProducts()">
+                        <label class="form-check-label" for="inStockOnly">
+                            På lager
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+   
+
+    @@media (max-width: 1200px) {
+        .filter-container {
+            display: none;
+        }
+    }
+</style>

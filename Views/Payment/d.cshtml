@@ -1,0 +1,333 @@
+﻿@*
+ <!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif; /* Apply the imported font */
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+
+            justify-content: space-between;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            width: 100%;
+        }
+
+        h2, h3 {
+            color: green;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .form-group input, .form-group textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+                color: #333;
+            }
+
+            .form-group textarea {
+                resize: vertical;
+            }
+
+        .checkout-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .checkout-button:hover {
+                background-color: #218838;
+            }
+
+        .order-summary {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+            .order-summary p {
+                margin: 0 0 10px;
+            }
+
+                .order-summary p strong {
+                    font-size: 1.1em;
+                }
+
+        .form-group input[type="checkbox"],
+        .form-group input[type="radio"] {
+            display: inline-block;
+            width: auto;
+        }
+
+        .form-group label[for="BusinessCustomer"],
+        .form-group label[for="CreateAccount"],
+        .form-group label[for="ShipToDifferentAddress"],
+        .form-group label[for="InvoicePayment"],
+        .form-group label[for="StorePayment"],
+        .form-group label[for="EANPayment"],
+        .form-group label[for="AcceptTerms"],
+        .form-group label[for="Subscribe"] {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: normal;
+        }
+
+        .hidden {
+            display: none;
+        }
+        @@media (max-width: 768px) {
+            .form-container {
+                flex-direction: column;
+            }
+
+            .form-section {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    @model WebKontorExpert.Models.CheckoutViewModel
+
+    @{
+        ViewBag.Title = "Payment";
+    }
+
+    <div class="form-container">
+        <div class="form-section">
+            <h3>Faktureringsoplysninger</h3>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="FirstName">Navn:</label>
+                    <input type="text" id="Name" name="Customer.Name" value="@Model.Customer.Name">
+                </div>
+                <div class="form-group">
+                    <label for="Phone">Telefon:</label>
+                    <input type="tel" id="Phone" name="Customer.Phone" value="@Model.Customer.Phone">
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input type="email" id="Email" name="Customer.Email" value="@Model.Customer.Email">
+                </div>
+                <div class="form-group">
+                    <label for="Address">Gadenavn og nr.:</label>
+                    <input type="text" id="Address" name="Customer.Address" value="@Model.Customer.Address">
+                </div>
+                <div class="form-group">
+                    <label for="ZipCode">Postnummer:</label>
+                    <input type="text" id="ZipCode" name="Customer.ZipCode" value="@Model.Customer.ZipCode">
+                </div>
+                <div class="form-group">
+                    <label for="City">By:</label>
+                    <input type="text" id="City" name="Customer.City" value="@Model.Customer.City">
+                </div>
+            </form>
+        </div>
+        <div class="form-section">
+            <h3>Vare</h3>
+            <div class="order-summary">
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="order-item">
+                        <img src="@item.Product.MainImageUrl" alt="@item.Product.Name" style="width: 50px; height: auto;" />
+                        <p><strong>@item.Product.Name</strong></p>
+                        <p>Antal: @item.Quantity</p>
+                        <p>Pris: @String.Format("{0:0.00}", item.Price * item.Quantity) kr. inkl. moms</p>
+                    </div>
+                }
+                <p><span>Forsendelse</span></p>
+                <p> <input type="checkbox" id="EdgeDelivery" name="ShippingMethod" checked>Kantstenslevering (800 kr. inkl. moms)</p>
+                <p><input type="checkbox" id="PickupAtStore" name="PickupAtStore"> Afhentning hos KontorXpert (Smedegade 99, Slagelse 4200)</p>
+                <p>Moms: @String.Format("{0:0.00}", Model.CartItems.Sum(i => i.Price * i.Quantity) * 0.25m) kr.</p>
+                <p>Total: @String.Format("{0:0.00}", Model.CartItems.Sum(i => i.Price * i.Quantity) * 1.25m) kr.</p>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Radio buttons for billing address selection -->
+            <div class="form-group">
+                <input type="radio" id="sameAddress" name="BillingAddress" value="same" checked>
+                <label for="sameAddress">Samme adresse som leveringsadressen</label>
+            </div>
+            <div class="form-group">
+                <input type="radio" id="differentAddress" name="BillingAddress" value="different">
+                <label for="differentAddress">Brug en anden faktureringsadresse</label>
+            </div>
+
+
+            <!-- Conditional billing address form -->
+            <div id="billing-address-form" class="hidden">
+                <h3>Leveringsoplysninger</h3>
+                <div class="form-group">
+                    <label for="Company">Virksomhed:</label>
+                    <input type="text" id="Company" name="Billing.Company">
+                </div>
+                <div class="form-group">
+                    <label for="BillingName">Navn:</label>
+                    <input type="text" id="BillingName" name="Billing.Name">
+                </div>
+                <div class="form-group">
+                    <label for="BillingAddress">Gade & husnummer:</label>
+                    <input type="text" id="BillingAddress" name="Billing.Address">
+                </div>
+                <div class="form-group">
+                    <label for="BillingZipCode">Postnummer:</label>
+                    <input type="text" id="BillingZipCode" name="Billing.ZipCode">
+                </div>
+                <div class="form-group">
+                    <label for="BillingCity">By:</label>
+                    <input type="text" id="BillingCity" name="Billing.City">
+                </div>
+                <div class="form-group">
+                    <label for="BillingCountry">Land:</label>
+                    <input type="text" id="BillingCountry" name="Billing.Country">
+                </div>
+                <div class="form-group">
+                    <label for="BillingPhone">Telefonnummer:</label>
+                    <input type="tel" id="BillingPhone" name="Billing.Phone">
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="form-group">
+                <input type="checkbox" id="AcceptTerms" name="AcceptTerms">
+                <label for="AcceptTerms">Jeg har læst og accepterer webshoppen's vilkår og betingelser</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="Subscribe" name="Subscribe">
+                <label for="Subscribe">Ja tak, jeg vil gerne modtage gode tilbud og nyheder fra KontorXpert</label>
+            </div>
+            <button id="checkout-button" class="checkout-button">GODKEND ORDRE</button>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('@ViewBag.PublishableKey');
+
+        var checkoutButton = document.getElementById('checkout-button');
+
+        checkoutButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch('/Payment/CreateSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (sessionId) {
+                    return stripe.redirectToCheckout({ sessionId: sessionId.id });
+                })
+                .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                });
+        });
+
+        // Ensure only one of the shipping options can be checked at a time
+        document.getElementById('EdgeDelivery').addEventListener('change', function () {
+            if (this.checked) {
+                document.getElementById('PickupAtStore').checked = false;
+            }
+        });
+
+        document.getElementById('PickupAtStore').addEventListener('change', function () {
+            if (this.checked) {
+                document.getElementById('EdgeDelivery').checked = false;
+            }
+        });
+
+
+            // Toggle billing address form visibility
+            document.querySelectorAll('input[name="BillingAddress"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    var billingForm = document.getElementById('billing-address-form');
+                    if (document.getElementById('differentAddress').checked) {
+                        billingForm.classList.remove('hidden');
+                    } else {
+                        billingForm.classList.add('hidden');
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
+
+*@
+@{
+}

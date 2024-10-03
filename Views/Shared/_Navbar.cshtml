@@ -1,0 +1,209 @@
+﻿@Html.Partial("_TopBanner")
+<nav class="navbar navbar-light bg-white sticky-top">
+    <div class="container-fluid position-sticky">
+        <!-- Logo on the left -->
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+            <img src="~/images/logoImage/logoKontorExpert.PNG" alt="WebKontorExpert Logo" style="height: 40px;" />
+        </a>
+
+        <!-- Search bar in the middle for larger screens -->
+        <div class="d-none d-lg-block mx-auto" style="flex: 1; max-width: 40%;">
+            <form class="d-flex position-relative" action="@Url.Action("Index", "Product")" method="get">
+                <i class="fas fa-search search-icon"></i>
+                <input class="form-control me-2 custom-search-bar" type="search" name="searchTerm" placeholder="Søg efter blandt vores mærker og produkter" aria-label="Search" />
+            </form>
+        </div>
+
+        <!-- Icons in the center -->
+        <div class="d-flex icons-container">
+            <div class="icon-item">
+                @Html.Partial("_Login")
+            </div>  
+            <div class="icon-item">
+                @Html.Partial("_Heart")
+            </div>
+
+            <div class="icon-item">
+                @Html.Partial("_CartPartial")
+            </div>
+
+
+
+
+            <!-- Burger Icon for smaller screens -->
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoryMenu" aria-controls="categoryMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="24" height="2" fill="currentColor" />
+                    <rect y="6" width="24" height="2" fill="currentColor" />
+                    <rect y="12" width="24" height="2" fill="currentColor" />
+                </svg>
+            </button>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Collapsible Category Menu -->
+<div class="collapse" id="categoryMenu">
+    <div class="accordion-item">
+        <div class="accordion-body">
+            @await Component.InvokeAsync("CategoryListSmall")
+        </div>
+    </div>
+</div>
+
+<!-- Search bar below navbar for smaller screens -->
+<div class="container-fluid d-lg-none mt-2 sticky-search">
+    <form class="position-relative searchMargins" action="@Url.Action("Index", "Product")" method="get">
+        <i class="fas fa-search search-icon"></i>
+        <input class="form-control custom-search-bar" type="search" name="searchTerm" placeholder="Søg efter blandt vores mærker og produkter" aria-label="Search" />
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function adjustSearchBar() {
+                if ($(window).width() < 1200) {
+                    $('.navbar-collapse form').addClass('d-block').removeClass('d-none');
+                } else {
+                    $('.navbar-collapse form').addClass('d-none').removeClass('d-block');
+                }
+            }
+
+            $(window).resize(adjustSearchBar);
+            adjustSearchBar();
+        });
+    </script>
+}
+
+<style>
+
+  /* Base styles */
+  .navbar-toggler {
+    display: none;
+  }
+
+  .searchMargins {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  .sticky-search {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 60px;
+    height: 66px;
+    background-color: white;
+    z-index: 9; /* Ensure it appears above other content */
+  }
+
+  .navbar {
+    height: 60px;
+  }
+
+  .navbar .navbar-brand {
+    width: 10%; /* Adjust as needed */
+  }
+
+  .navbar-brand {
+    margin-bottom: 10px;
+  }
+
+  /* Base styles for icons container */
+  .icons-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+  }
+
+  /* Style for the search bars */
+  .custom-search-bar {
+    border-radius: 5px;
+    padding-left: 35px; /* Space for search icon */
+    background-color: #F5F5EF;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: black;
+  }
+
+    .custom-search-bar:focus {
+        outline: none;
+        box-shadow: none; /* This removes any potential shadow that might appear on focus */
+    }
+
+
+  /* Style for the custom-toggler button and icon */
+  .custom-toggler {
+    border: none; /* Remove default border */
+    padding: 5px; /* Adjust button size */
+    background-color: transparent; /* Transparent background */
+  }
+
+  .custom-toggler svg {
+    color: #106a00; /* Icon color */
+    width: 24px; /* Icon width */
+    height: 16px; /* Icon height */
+  }
+
+  /* Media Queries */
+
+  /* Custom styles for larger screens (min-width: 1270px) */
+  @@media (min-width: 1270px) {
+    .icons-container {
+      gap: 15px; /* Default gap for larger screens */
+    }
+
+    .navbar-toggler {
+      display: none; /* Hide the burger icon on larger screens */
+    }
+  }
+
+  /* Styles for screens between 768px and 1268px (including 1269px) */
+  @@media (max-width: 1268px) {
+    .icons-container {
+      gap: 5px; /* Reduce gap between icons */
+      margin: 0; /* Remove extra margin */
+    }
+
+    .icon-item {
+      margin: 0; /* Ensure no extra margin around icons */
+    }
+
+    .navbar-toggler {
+      display: block; /* Show the burger icon on smaller screens */
+    }
+  }
+
+  /* Styles for smaller screens (max-width: 576px) */
+  @@media (max-width: 576px) {
+    .icons-container {
+      gap: 0.1px; /* Further reduce gap between icons */
+      padding: 0 5px; /* Adjust horizontal padding if needed */
+    }
+
+    .icon-item {
+      gap: 0.1px;
+      width: 25%;
+    }
+
+    .custom-toggler {
+      margin-left: 2px; /* Space between toggler and icons */
+    }
+
+    .navbar .navbar-brand img {
+      width: 110px; /* Adjust logo size for smaller screens */
+      height: auto; /* Maintain aspect ratio */
+    }
+
+    .custom-search-bar::placeholder {
+      font-size: 14px; /* Adjust font size of the placeholder text */
+    }
+  }
+
+</style>

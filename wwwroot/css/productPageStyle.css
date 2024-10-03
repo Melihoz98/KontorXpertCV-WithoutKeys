@@ -1,0 +1,231 @@
+﻿.product-specifications {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+
+
+    .product-specifications .list-group-item {
+        padding: 10px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        background-color: #fff;
+    }
+
+        .product-specifications .list-group-item strong {
+            font-weight: 600;
+            color: #555;
+        }
+
+
+.add-to-favorites {
+    background-color: white;
+    color: green;
+    border: 2px solid green; /* Added border property */
+    text-align: center;
+    font-weight: 500;
+}
+
+    .add-to-favorites button:hover {
+        text-decoration: underline;
+    }
+
+@media (max-width: 1200px) {
+    .category-list-container {
+        display: none;
+    }
+}
+/* New styles for the add-to-cart button with !important */
+.add-to-cart-button {
+    background-color: green !important;
+    width: 100% !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 0 !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+}
+
+    .add-to-cart-button:hover {
+        background-color: darkgreen !important;
+    }
+
+.green-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.yellow-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ffc107;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 0.25rem;
+    box-shadow: none;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.card-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    margin-bottom: 1rem;
+}
+
+.list-group-item {
+    padding: 0.75rem 1rem;
+    border: none;
+}
+
+.main-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.thumbnail-images {
+    display: flex;
+    flex-wrap: wrap; /* Allows images to wrap to the next line */
+    gap: 10px; /* Adds space between images */
+    margin-bottom: 20px;
+}
+
+.thumbnail-image {
+    width: calc(33.333% - 10px); /* Adjust to fit three images per row with space between */
+    height: auto;
+    cursor: pointer;
+    border: none;
+    transition: border-color 0.3s ease;
+}
+
+
+
+    .thumbnail-image:hover {
+        border-color: lightseagreen;
+    }
+
+.quantity-selector {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 0;
+}
+
+.input-group-text {
+    background-color: transparent;
+    border: none;
+    padding-right: 10px;
+    font-size: 1rem;
+}
+
+.quantity-input {
+    width: 60px;
+    margin: 0 5px;
+    color: black;
+    font-weight: 700;
+}
+
+.btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.add-to-cart {
+    text-align: center;
+}
+
+/* New styles for price and exclude-vat */
+.price {
+    font-size: 2.5rem;
+    color: darkgreen;
+    font-weight: bold;
+    font-family: "Playfair Display", serif;
+}
+
+.exclude-vat {
+    font-size: 0.9rem;
+    color: grey;
+    margin-left: 10px;
+}
+
+.brand {
+    font-size: 1.5rem;
+    color: black;
+    font-weight: 300;  
+    text-transform: uppercase;
+}
+
+.quantity-selector .input-group {
+    width: 300px;
+    color: green;
+}
+
+.quantity {
+    color: green;
+}
+
+
+
+
+
+
+
+.discounted-price {
+    font-size: 2.5rem;
+    color: darkgreen;
+    font-weight: bold;
+    font-family: "Manrope", system-ui;
+}
+
+.original-price {
+    font-size: 1.5rem;
+    color: grey;
+    text-decoration: line-through;
+    font-family: "Manrope", system-ui;
+}
+
+.normal-price {
+    font-size: 2.5rem;
+    color: black;
+    font-weight: 400;
+    font-family: "Manrope", system-ui;
+}

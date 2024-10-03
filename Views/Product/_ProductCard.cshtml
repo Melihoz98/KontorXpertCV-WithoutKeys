@@ -1,0 +1,93 @@
+﻿<head>
+    <link rel="stylesheet" href="~/css/ProductStyle.css" />
+    <script src="~/js/productCardScript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<h2 style="text-align: center; margin-top: 50px;">@ViewData["Title"] @ViewBag.CategoryName</h2>
+<div id="notificationHeart" class="notification"></div>
+<div id="notificationCart" class="notification"></div>
+
+@if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+{
+    <h1 class="searchHeader" style="text-align: center; margin-top: 50px;">Din søgning for "@ViewBag.SearchTerm" fandt @ViewBag.ProductCount produkter</h1>
+}
+
+@Html.Partial("_ProductFilter")
+<div class="container custom-container">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-4">
+                <div class="card">
+                    <a href="@Url.Action("ProductPage", "Product", new { id = product.ProductID })">
+                        <div class="image-container">
+                            @if (product.IsUsed == false )
+                            {
+                                <span class="new-label">Ny</span>
+                            }
+                            @{
+                                var discount = (decimal?)product.Discount;
+                            }
+                            @if (discount > 0)
+                            {
+                                <span class="discount-label"> - @Math.Round(discount.Value) %</span>
+                            }
+                            <img src="@product.MainImageUrl" class="card-img-top" alt="Product Image">
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        
+                            <div class="card-actions">
+                                <button class=" icon-button heart-icon" data-product-id="@product.ProductID" onclick="event.preventDefault(); handleHeartClick(@product.ProductID)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+
+                                </button>
+                                <button class="icon-button cart-icon" data-product-id="@product.ProductID" onclick="event.preventDefault(); handleCartClick(@product.ProductID)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+                                        <path d="M6 6h15l-1.68 9.39a2 2 0 01-1.98 1.61H8.66a2 2 0 01-1.97-1.61L4 4H1"></path>
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="19" cy="21" r="1"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                            <h5 class="product-brand">@product.Brand</h5>
+                   
+                        <p class="product-name-dimens">@product.Name @product.Dimensions</p>
+                        <p class="product-price">
+                            @{
+                                var discountPriceWithoutVAT = (decimal?)product.DiscountPriceWithoutVAT;
+                                var priceWithoutVAT = (decimal?)product.PriceWithoutVAT;
+                            }
+
+                            @if (discountPriceWithoutVAT.HasValue && discountPriceWithoutVAT > 0)
+                            {
+                                <span class="discounted-price">@Math.Round(discountPriceWithoutVAT.Value) kr.</span>
+                                <span class="original-price">@Math.Round(priceWithoutVAT.Value) kr.</span>
+
+                            }
+                            else
+                            {
+                                <span>@Math.Round(priceWithoutVAT.Value) kr.</span>
+                            }
+                        </p>
+                        <p>
+                            @if (product.StockQuantity > 0)
+                            {
+                                <span class="green-dot"></span>
+                            }
+                            else
+                            {
+                                <span class="yellow-dot"></span>
+                            }
+                            @product.StockQuantity på lager
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

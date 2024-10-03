@@ -1,0 +1,282 @@
+﻿
+@media (max-width: 1270px) {
+    .category-list-container
+
+{
+    display: none;
+}
+
+}
+
+.card-actions {
+    display: flex;
+    justify-content: center; /* This centers the buttons horizontally */
+    gap: 10px; /* Optional: Adds space between the buttons */
+}
+
+.icon-button {
+    background-color: transparent;
+    width: 30px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    height: 28px;
+}
+
+.icon-button svg {
+    stroke: black;
+    fill: white;
+    stroke-width: 2;
+    width: 28px;
+    height: 30px;
+    color: white;
+    border: black;
+
+
+}
+
+@media (max-width: 800px) {
+    .icon-button {
+        background-color: transparent;
+        width: 22px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
+        height: 25px;
+    }
+
+        .icon-button svg {
+            stroke: black;
+            fill: white;
+            stroke-width: 2;
+            width: 20px;
+            height: 23px;
+            color: white;
+            border: black;
+        } 
+}
+    /* Notification Styling */
+    /* Notification Styling */
+    .notification {
+        position: fixed;
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust position by negative 50% to truly center it */
+        background-color: darkslategrey; /* Green background */
+        color: white;
+        padding: 20px; /* Add some padding */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        opacity: 0; /* Initially hidden */
+        visibility: hidden; /* Initially hidden */
+        transition: opacity 0.5s ease, visibility 0.5s ease; /* Smooth transition */
+        z-index: 1000; /* Ensure it's on top */
+        max-width: 80%; /* Responsive width */
+        text-align: center; /* Center text */
+        font-weight: 700;
+        font-family: "Manrope", system-ui;
+    }
+
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+    .category-list-container {
+        margin-top: 35px;
+        margin-bottom: 30px;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .filter-container {
+            display: none;
+        }
+    }
+
+    .filter-container {
+        width: 20%;
+        float: left;
+    }
+
+    .content-container {
+        width: 75%;
+        float: right;
+    }
+
+    .filter-section h5 {
+        cursor: pointer;
+    }
+
+
+
+    .row {
+        justify-content: center;
+    }
+
+    .card {
+        position: relative;
+        border: none;
+        box-shadow: none;
+    }
+
+    .image-container {
+        position: relative;
+    }
+
+    .new-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: white;
+        color: black;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-size: 0.90rem;
+        font-weight: 400;
+    }
+
+    .discount-label {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        color: green;
+        padding: 3px 6px;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .card-img-top {
+        height: auto;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .card-body {
+        position: relative;
+    }
+
+
+
+
+    .product-brand {
+        color: dimgray;
+        font-weight: 400;
+        font-size: .825rem;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .product-name-dimens {
+        color: black;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .product-price {
+        font-weight: 400;
+        color: black;
+        font-size: 1.5rem;
+        font-family: "Manrope", system-ui;
+    }
+
+    .discounted-price {
+        font-weight: 400;
+        color: darkgreen;
+        font-size: 1.5rem;
+        font-family: "Manrope", system-ui;
+    }
+
+    .original-price {
+        font-weight: 400;
+        color: dimgrey;
+        font-size: 1.2rem;
+        font-family: "Manrope", system-ui;
+        text-decoration: line-through;
+        margin-left: 10px;
+    }
+
+    .green-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #28a745;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .yellow-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #ffc107;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 800px) {
+        .col-lg-3 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        h2, h1 {
+            margin-top: 50px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .product-price,
+        .discounted-price {
+            font-size: 1.2rem;
+        }
+
+        .original-price {
+            font-size: 1rem;
+        }
+
+        .custom-container {
+            padding: 0 10px;
+        }
+    }
+
+    @media (max-width: 576px) {
+
+
+        .col-sm-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .product-brand {
+            font-size: 0.75rem;
+        }
+
+        .product-name-dimens {
+            font-size: 0.9rem;
+        }
+
+        .product-price,
+        .discounted-price {
+            font-size: 1rem;
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+        }
+    }
+
+    .product-filter-h {
+        font-family: "Quicksand", system-ui;
+        font-weight: 500;
+    }

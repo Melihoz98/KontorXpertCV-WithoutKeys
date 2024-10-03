@@ -1,0 +1,226 @@
+﻿<!-- Link to Open Modal -->
+<a href="#" class="btn-heart" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <!-- Black Heart Icon SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-heart" viewBox="0 0 32 32" style="margin-top: 23px;">
+        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+    </svg>
+    <span id="favorites-count" class="icon-count" style="display: none;">0</span>
+</a>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header sticky-top bg-white">
+                <!-- Sticky header -->
+                <h5 class="modal-title" id="exampleModalLabel">Favoritter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="favorites-list" style="max-height: 310px; overflow-y: auto;">
+                <!-- Favorite items will be dynamically loaded here -->
+            </div>
+            <div class="modal-footer sticky-bottom bg-white">
+                <!-- Sticky footer -->
+                <button type="button" class="btn btn-danger" id="clear-favorites">Tøm listen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .modal{
+    
+    height: 100vh;
+    }
+
+    .modal-body{
+        height: 150vh;
+    }
+    #clear-favorites {
+        background-color: white; /* Set background color to white */
+        color: black; /* Set text color to black */
+        border: 2px solid black; /* Set border color and width */
+        border-radius: 0.25rem; /* Optional: for rounded corners */
+        box-shadow: none; /* Remove default shadow */
+        padding: 0.5rem 1rem; /* Adjust padding as needed */
+        font-size: 16px; /* Adjust font size as needed */
+        font-weight: 600; /* Adjust font weight as needed */
+    }
+
+    .modal-backdrop {
+        z-index: 10;
+    }
+
+    .modal-title {
+        color: green;
+    }
+
+    /* Custom styles for the 'Close' button in the modal footer */
+    .modal-footer .btn-secondary {
+        background-color: white;
+        color: green;
+        border: 2px solid green;
+        border-radius: 0.25rem; /* Optional: to give a rounded border */
+        box-shadow: none; /* Remove default shadow */
+        padding: 0.5rem 1rem; /* Adjust padding as needed */
+    }
+
+    .btn-heart {
+        position: relative; /* Make the heart icon's container the positioned ancestor */
+    }
+
+    #favorites-count {
+        position: absolute;
+        top: 22px;
+        right: 24px;
+        background-color: #006400; /* Dark green color */
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.8em;
+    }
+
+    .modal-header.sticky-top, .modal-footer.sticky-bottom {
+        position: sticky;
+        z-index: 20;
+    }
+
+    .modal-header.sticky-top {
+        top: 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-footer.sticky-bottom {
+        bottom: 0;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .price-style {
+        font-weight: 400;
+        color: black;
+        font-size: 1.5rem;
+        font-family: "Manrope", system-ui;
+    }
+
+    /* Style for each favorite item */
+    .favorite-item {
+        display: flex; /* Align items horizontally */
+        align-items: center; /* Center items vertically within the container */
+        border-bottom: 1px solid #ddd; /* Optional: Add a bottom border for separation */
+        padding: 10px 0; /* Optional: Add padding */
+        margin-bottom: 10px; /* Add space between items */
+    }
+
+    /* Style for the details section */
+    .favorite-details {
+        margin-left: 15px; /* Space between image and text */
+    }
+
+    /* Ensure images are displayed correctly */
+    .favorite-item img {
+        display: block; /* Remove any extra space below the image */
+    }
+
+    /* Ensure the list container stacks items vertically */
+    #favorites-list {
+        display: block; /* Default block display to stack items vertically */
+    }
+
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadFavorites();  // Load favorites when the page is ready
+        updateFavoritesCount();  // Update favorites count
+
+        document.getElementById('clear-favorites').addEventListener('click', function () {
+            fetch('/Favorite/ClearFavorites', {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadFavorites();  // Reload favorites to reflect changes
+                        updateFavoritesCount();  // Update favorites count
+                    } else {
+                        console.error('Failed to clear favorites');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error clearing favorites:', error);
+                });
+        });
+    });
+
+    function loadFavorites() {
+        fetch('/Favorite/GetFavorites')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Favorites data:', data.items);  // Log fetched data
+                const favoritesList = document.getElementById('favorites-list');
+                const clearFavoritesButton = document.getElementById('clear-favorites');
+                favoritesList.innerHTML = '';
+
+                if (data.items.length === 0) {
+                    favoritesList.innerHTML = '<p>Din favoritliste er tom.</p>';
+                    clearFavoritesButton.style.display = 'none'; // Hide button if list is empty
+                } else {
+                    clearFavoritesButton.style.display = 'block'; // Show button if list is not empty
+                    data.items.forEach(item => {
+                        const priceExcludingVAT = Math.round(item.price / 1.25);  // Remove 25% VAT and round
+                        let displayPrice = `<strong class="price-style">${priceExcludingVAT} Kr</strong> ekskl. moms`;
+
+                        if (item.discount > 0) {
+                            const discountedPrice = Math.round(item.price * (1 - item.discount / 100) / 1.25);  // Calculate discounted price excluding VAT and round
+                            displayPrice = `
+                                <p>
+                                    <del class="price-style">${priceExcludingVAT} Kr</del>
+                                    <strong class="price-style">${discountedPrice} Kr</strong> ekskl. moms
+                                </p>
+                            `;
+                        }
+
+                        favoritesList.innerHTML += `
+                            <div class="favorite-item">
+                                <a href="/Product/ProductPage/${item.productID}">
+                                    <img src="${item.mainImageUrl}" alt="${item.name}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                </a>
+                                <div class="favorite-details">
+                                    <p>${item.brand}</p>
+                                    <h6><strong>${item.name}</strong></h6>
+                                    ${displayPrice}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading favorites:', error);
+            });
+    }
+
+    function updateFavoritesCount() {
+        fetch('/Favorite/GetFavorites')
+            .then(response => response.json())
+            .then(data => {
+                const countElement = document.getElementById('favorites-count');
+                if (data.count > 0) {
+                    countElement.textContent = data.count;
+                    countElement.style.display = 'inline';
+                } else {
+                    countElement.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching favorites count:', error);
+            });
+    }
+
+</script>

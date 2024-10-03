@@ -1,0 +1,13 @@
+﻿<div class="category-list-container">
+    @await Component.InvokeAsync("CategoryList")
+</div>
+@Html.Partial("_ProductCard")
+
+
+<style>
+    @@media (max-width: 1270px) {
+        .category-list-container {
+            display: none;
+        }
+    }
+</style>

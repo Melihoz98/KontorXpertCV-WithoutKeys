@@ -1,0 +1,137 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!-- The link directly wraps the SVG to ensure only the SVG is clickable -->
+<a href="#" data-bs-toggle="modal" data-bs-target="#userModal" class="icon-link">
+    <!-- Black Person Icon SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person" viewBox="0 0 32 32" style="margin-top: 23px;">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+    </svg>
+</a>
+
+<!-- User Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="userModalLabel">Bliv medlem hos KontorXpert</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <p class="fordeleHeader">
+                Fordele:
+            </p>
+          <ul class="fordele">
+              <li class="list-group-fordele">
+                  10% rabat på første køb
+              </li>
+                <li class="list-group-fordele">
+                    Gemme dine favoritter
+                </li>
+                <li>
+                   Se ordre historik
+                </li>
+                <li class="list-group-fordele">
+                    Modtag nyheder om tilbud og nye produkter på mail
+                </li>
+          </ul>
+            <div class="modal-body d-flex justify-content-center align-items-end">
+                @if (!SignInManager.IsSignedIn(User))
+                {
+                    <a class="btn custom-btn-green me-3" href="@Url.Action("Register", "Account")">Bliv medlem</a>
+                    <a class="btn custom-btn-black" href="@Url.Action("Login", "Account")">Login</a>
+                }
+                else
+                {
+                    <a class="btn btn-danger" href="@Url.Action("Logout", "Account")">Logout</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+
+    .fordeleHeader{
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+        margin-top: 10px;
+        text-transform:uppercase;
+        text-decoration: underline;
+
+    }
+
+    .fordele {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the left */
+        padding: 0;
+        list-style-type: none; /* Remove default list styling */
+        margin: 0; /* Remove default margin */
+    }
+
+        .fordele li {
+            padding-bottom: 20px; /* Space between items */
+            text-align: left;
+            white-space: nowrap;
+            color: black;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+
+    .modal-content{
+        height:400px;
+        text-align:center;
+    }
+    .modal-title {
+        color: black !important;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center !important;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    .fordeleHeader {
+        color: black;
+        font-weight: 600;
+        font-size: 18px;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    .modal-body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 300px; /* Adjust this height based on your modal size */
+        padding-bottom: 20px; /* Add padding to position buttons at the bottom */
+    }
+
+    .custom-btn-green,
+    .custom-btn-black {
+        width: 150px;
+        height: 45px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .custom-btn-green {
+        background-color: white;
+        color: green !important;
+        border: 2px solid green;
+    }
+
+    .custom-btn-black {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+    }
+
+</style>

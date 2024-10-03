@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>We Buy Section</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
+    <style>
+        .we-buy-section {
+            display: flex;
+            background-color: #BADFCA;
+            padding: 160px;
+            flex-wrap: wrap;
+        }
+
+        .we-buy-image {
+            flex: 1;
+            background: url('@Url.Content("~/images/designImages/weBuy.jpg")') no-repeat center center;
+            background-size: cover;
+            min-width: 300px;
+            min-height: 300px; /* Ensuring it remains visible */
+        }
+
+        .we-buy-text {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 300px;
+        }
+
+        .we-buy-text h2 {
+            color: #006400;
+        }
+
+        .we-buy-text p {
+            font-size: 1.2em;
+        }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: green;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 2px solid green; /* Added border property */
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .shop-button:hover {
+            text-decoration: underline;
+        }
+
+        @@media (max-width: 768px) {
+            .we-buy-section {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .we-buy-text {
+                padding: 10px;
+            }
+
+            .we-buy-image {
+                height: 300px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .we-buy-text {
+                min-width: 100%;
+            }
+
+            .we-buy-image {
+                min-width: 100%;
+                height: 200px; /* Ensuring it fits in smaller screens */
+            }
+
+            .we-buy-section {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="we-buy-section">
+        <div class="we-buy-image"></div>
+        <div class="we-buy-text">
+            <h2>Vi opkøber dine møbler</h2>
+            <p>KontorXpert opkøber møbler, og i er velkommen til at komme her med dem</p>
+            <a class="shop-button" href="@Url.Action("WeBuy", "Home")">SE HER HVORDAN</a>
+        </div>
+    </div>
+</body>
+</html>

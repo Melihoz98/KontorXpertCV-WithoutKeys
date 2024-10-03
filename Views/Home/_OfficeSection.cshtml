@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Home Office Section</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
+    <style>
+        .home-office-section {
+            display: flex;
+            background-color: #f8f4ea;
+            padding: 160px;
+            flex-wrap: wrap;
+        }
+
+        .home-office-text {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 300px;
+        }
+
+            .home-office-text h2 {
+                color: #006400;
+            }
+
+            .home-office-text p {
+                font-size: 1.2em;
+            }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: green;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 2px solid green; /* Added border property */
+            text-align: center;
+            font-weight: 600;
+        }
+
+            .shop-button:hover {
+                text-decoration: underline;
+            }
+
+        .home-office-image {
+            flex: 1;
+            background: url('@Url.Content("~/images/designImages/xpertbillede.jpg")') no-repeat center center;
+            background-size: cover;
+            min-width: 300px;
+            min-height: 300px; /* Ensuring it remains visible */
+        }
+
+        @@media (max-width: 768px) {
+            .home-office-section {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .home-office-text {
+                padding: 10px;
+            }
+
+            .home-office-image {
+                height: 300px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .home-office-text {
+                min-width: 100%;
+            }
+
+            .home-office-image {
+                min-width: 100%;
+                height: 200px; /* Ensuring it fits in smaller screens */
+            }
+
+            .home-office-section {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home-office-section">
+        <div class="home-office-text">
+            <h2>Bredt udvalgt af kontorborde</h2>
+            <p>KontorXpert har bredt udvalg af skriveborde, herunder hæve-sænke borde</p>
+            <a class="shop-button" href="@Url.Action("Index", "Product", new { categoryID = 35 })">SHOP HÆVE-SÆNKEBORDE</a>
+        </div>
+        <div class="home-office-image"></div>
+    </div>
+</body>
+</html>

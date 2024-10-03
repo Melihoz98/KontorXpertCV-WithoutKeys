@@ -1,0 +1,52 @@
+﻿@{
+    int cartItemCount = ViewBag.CartItemCount ?? 0;
+}
+
+
+<a href="@Url.Action("Index", "ShoppingCart")" class="btn-cart" style="position: relative;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-cart" viewBox="0 0 32 32" style="margin-top: 23px;">
+        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+    </svg>
+
+    <span id="cart-count" style="display: none;">
+        @ViewBag.CartItemCount
+    </span>
+</a>
+
+<style>
+    .btn-cart{
+        position: relative;
+    }
+
+    #cart-count {
+        position: absolute;
+        top: 22px;
+        right: 25px;
+        background-color: #006400; /* Dark green color */
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.8em;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ensure jQuery is included -->
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("GetCartItemCount", "ShoppingCart")',
+            type: 'GET',
+            success: function (data) {
+                console.log(data); // Debugging
+                if (data.count > 0) {
+                    $("#cart-count").text(data.count).show();
+                } else {
+                    $("#cart-count").hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to load cart item count:', xhr.responseText);
+            }
+        });
+    });
+</script>

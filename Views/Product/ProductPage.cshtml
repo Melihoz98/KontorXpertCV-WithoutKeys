@@ -1,0 +1,178 @@
+﻿@model WebKontorExpert.Models.Product // Replace with your actual namespace
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="category-list-container">
+    @await Component.InvokeAsync("CategoryList")
+</div>
+<div class="container">
+    <div class="row">
+        <!-- Left Column for Images -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Main Product Image -->
+                    <div class="main-image">
+                        <img id="mainImage" src="@Model.MainImageUrl" alt="@Model.Name">
+                    </div>
+
+                    <!-- Thumbnail Images -->
+                    <div class="thumbnail-images">
+                        <img class="thumbnail-image" src="@Model.MainImageUrl" alt="@Model.Name">
+                        @foreach (var image in Model.Images)
+                        {
+                            <img class="thumbnail-image" src="@image.ImageUrl" alt="@Model.Name">
+                        }
+                    </div>
+
+                </div>
+            </div>
+          
+        </div>
+
+        <!-- Right Column for Product Details -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-subtitle mb-2 brand">@Model.Brand</h2>
+                    <h1 class="card-title">@Model.Name @Model.Dimensions</h1>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="price">
+                                @{
+                                    if (Model.Price.HasValue)
+                                    {
+                                        // Calculate price without VAT
+                                        var priceWithoutVAT = Model.Price.Value / 1.25m;
+
+                                        if (Model.Discount > 0)
+                                        {
+                                            // Calculate discounted price without VAT
+                                            decimal? discountPriceWithoutVAT = priceWithoutVAT * (1 - Model.Discount / 100m);
+
+                                            // Check if discountPriceWithoutVAT has a value and round it
+                                            var roundedDiscountPrice = discountPriceWithoutVAT.HasValue ? Math.Round(discountPriceWithoutVAT.Value) : (decimal?)null;
+                                            var roundedOriginalPrice = Math.Round(priceWithoutVAT);
+
+                                            <span class="discounted-price">@string.Format("{0:F0} Kr.", roundedDiscountPrice)</span>
+                                            <span class="exclude-vat">ekskl. moms</span>
+                                            <br />
+                                            <span class="original-price">@string.Format("{0:F0} Kr.", roundedOriginalPrice)</span>
+                                        }
+                                        else
+                                        {
+                                            var roundedNormalPrice = Math.Round(priceWithoutVAT);
+                                            <span class="normal-price">@string.Format("{0:F0} Kr.", roundedNormalPrice)</span>
+                                            <span class="exclude-vat">ekskl. moms</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>Price not available</span>
+                                    }
+                                }
+                            </span>
+
+
+
+
+                        </li>
+                        <p>
+                            @if (Model.StockQuantity > 0)
+                            {
+                                <span class="green-dot"></span>
+                            }
+                            else
+                            {
+                                <span class="yellow-dot"></span>
+                            }
+                            @Model.StockQuantity på lager
+                        </p>
+                    </ul>
+
+
+
+
+                    <!-- Quantity Selector -->
+                    <div class="quantity-selector mt-3">
+                        <div class="input-group">
+                            <label for="quantity" class="input-group-text">Vælg antal:</label>
+                            <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">-</button>
+                            <input type="number" id="quantity" name="quantity" class="form-control text-center quantity-input" value="1" min="1">
+                            <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <div class="add-to-cart mt-3">
+                        <form asp-action="AddToCart" asp-controller="ShoppingCart" method="post">
+                            <input type="hidden" name="productId" value="@Model.ProductID" />
+                            <input type="hidden" id="quantityInput" name="quantity" value="1" />
+                            <button type="submit" class="btn add-to-cart-button">Tilføj til kurven</button>
+                        </form>
+                    </div>
+
+
+                    <!-- Add to Favorites Button -->
+                    <div class="add-to-favorites mt-3">
+                        <form asp-action="AddToFavorites" asp-controller="Favorite" method="post" id="favoriteForm">
+                            <input type="hidden" name="productId" value="@Model.ProductID" />
+                            <button type="button" class="btn add-to-favorites-button" id="addToFavoritesButton" onclick="handleHeartClick('@Model.ProductID')">
+                                <i class="fas fa-heart" style="color: red;"></i> Føj til favoriter
+                            </button>
+                        </form>
+                    </div>
+
+
+
+                   
+                </div>
+
+
+
+
+                <!-- Product Description -->
+                <div class="product-description mt-3">
+                    <h3>Beskrivelse</h3>
+                    <p>@Model.Description</p>
+                </div>
+
+
+
+
+                <!-- Product Specifications -->
+                <div class="product-specifications mt-3">
+                    <h3>Specifikationer</h3>
+                    <ul class="list-group list-group-flush">
+                        @if (!string.IsNullOrEmpty(Model.Color))
+                        {
+                            <li class="list-group-item"><strong>Farve:</strong> @Model.Color</li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Dimensions))
+                        {
+                            <li class="list-group-item"><strong>Mål:</strong> @Model.Dimensions</li>
+                        }
+                        @if (Model.CategoryID.HasValue)
+                        {
+                            <li class="list-group-item"><strong>Kategori:</strong> @Model.CategoryID</li>
+                        }
+                        <li class="list-group-item"><strong>Stand:</strong> @(Model.IsUsed.HasValue && Model.IsUsed.Value ? "Brugt" : "Ny")</li>
+                        <li class="list-group-item"><strong>SKU Nummer:</strong> @Model.SKU</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/productPageScript.js"></script>
+
+
+
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="~/css/productPageStyle.css" />

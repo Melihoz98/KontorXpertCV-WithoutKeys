@@ -1,0 +1,226 @@
+﻿@model WebKontorExpert.Models.CategoryManagementViewModel
+
+<div class="text-center">
+    <h1 class="display-4">Category Management</h1>
+</div>
+
+<div class="container">
+    <div class="text-right mb-3">
+        <!-- Radio buttons to toggle between Parent Categories and Categories -->
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="categoryType" id="parentCategoryRadio" value="ParentCategory" checked>
+            <label class="form-check-label" for="parentCategoryRadio">Parent Categories</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="categoryType" id="categoryRadio" value="Category">
+            <label class="form-check-label" for="categoryRadio">Categories</label>
+        </div>
+    </div>
+    <!-- Parent Categories Section -->
+    <div id="parentCategoriesSection">
+        <h2>Parent Categories</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Parent Category ID</th>
+                    <th>Parent Category Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var parentCategory in Model.ParentCategories)
+                {
+                    <tr>
+                        <td>@parentCategory.ParentCategoryID</td>
+                        <td>@parentCategory.ParentCategoryName</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editParentCategoryModal-@parentCategory.ParentCategoryID">Edit</button>
+                            <form asp-action="DeleteParentCategory" asp-controller="CategoryManagement" asp-route-parentCategoryId="@parentCategory.ParentCategoryID" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addParentCategoryModal">Add New Parent Category</button>
+    </div>
+
+
+    <!-- Categories Section -->
+    <div id="categoriesSection" style="display:none;">
+        <h2>Categories</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category Name</th>
+                    <th>Parent CategoryID</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model.Categories)
+                {
+                    <tr>
+                        <td>@category.CategoryID</td>
+                        <td>@category.CategoryName</td>
+                        <td>@category.ParentCategoryID</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editCategoryModal-@category.CategoryID">Edit</button>
+                            <form asp-action="DeleteCategory" asp-controller="CategoryManagement" asp-route-categoryId="@category.CategoryID" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addCategoryModal">Add New Category</button>
+    </div>
+
+</div>
+
+<!-- Modals for Add/Edit Parent Categories -->
+<div class="modal fade" id="addParentCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addParentCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addParentCategoryModalLabel">Add New Parent Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateParentCategory" asp-controller="CategoryManagement" method="post">
+                    <div class="form-group">
+                        <label for="ParentCategoryName">Parent Category Name</label>
+                        <input type="text" class="form-control" name="ParentCategoryName" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Parent Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach (var parentCategory in Model.ParentCategories)
+{
+    <div class="modal fade" id="editParentCategoryModal-@parentCategory.ParentCategoryID" tabindex="-1" role="dialog" aria-labelledby="editParentCategoryModalLabel-@parentCategory.ParentCategoryID" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editParentCategoryModalLabel-@parentCategory.ParentCategoryID">Edit Parent Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="EditParentCategory" asp-controller="CategoryManagement" method="post">
+                        <input type="hidden" name="ParentCategoryID" value="@parentCategory.ParentCategoryID" />
+                        <div class="form-group">
+                            <label for="ParentCategoryName">Parent Category Name</label>
+                            <input type="text" class="form-control" name="ParentCategoryName" value="@parentCategory.ParentCategoryName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modals for Add/Edit Categories -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateCategory" asp-controller="CategoryManagement" method="post">
+                    <div class="form-group">
+                        <label for="CategoryName">Category Name</label>
+                        <input type="text" class="form-control" name="CategoryName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="ParentCategoryID">Parent Category</label>
+                        <select class="form-control" name="ParentCategoryID">
+                            <option value="">Select Parent Category</option>
+                            @foreach (var parentCategory in Model.ParentCategories)
+                            {
+                                <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach (var category in Model.Categories)
+{
+    <div class="modal fade" id="editCategoryModal-@category.CategoryID" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel-@category.CategoryID" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCategoryModalLabel-@category.CategoryID">Edit Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="EditCategory" asp-controller="CategoryManagement" method="post">
+                        <input type="hidden" name="CategoryID" value="@category.CategoryID" />
+                        <div class="form-group">
+                            <label for="CategoryName">Category Name</label>
+                            <input type="text" class="form-control" name="CategoryName" value="@category.CategoryName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ParentCategoryID">Parent Category</label>
+                            <select class="form-control" name="ParentCategoryID">
+                                <option value="">Select Parent Category</option>
+                                @foreach (var parentCategory in Model.ParentCategories)
+                                {
+                                    if (parentCategory.ParentCategoryID == category.ParentCategoryID)
+                                    {
+                                        <option value="@parentCategory.ParentCategoryID" selected>@parentCategory.ParentCategoryName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('input[name="categoryType"]').change(function() {
+            if (this.value === 'ParentCategory') {
+                $('#parentCategoriesSection').show();
+                $('#categoriesSection').hide();
+            } else {
+                $('#parentCategoriesSection').hide();
+                $('#categoriesSection').show();
+            }
+        });
+    });
+</script>

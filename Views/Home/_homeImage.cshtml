@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <title>Image Section with Text</title>
+    <style>
+
+        .body-container {
+            /*remove the container default padding attribute*/
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            /*increase width as per your need*/
+            max-width: 100%;
+        } 
+        .image-section {
+            position: relative;
+            width: 100%;
+            height: 700px; /* Adjust the height as needed */
+            overflow: hidden;
+        }
+
+        .image-section img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            transition: transform 0.5s ease;
+        }
+
+        .image-section .text-container {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            color: white;
+            padding: 20px;
+            z-index: 0;
+            background: rgba(0, 0, 0, 0.5); /* Optional: adds a background to the text for better readability */
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            transition: transform 0.5s ease, padding 0.5s ease, background 0.5s ease;
+        }
+
+        /* Media queries to adjust the image and text for smaller screens */
+        @@media (max-width: 768px) {
+          
+            .image-section .text-container {
+                transform: scale(0.9);
+                padding: 15px;
+                background: rgba(0, 0, 0, 0.4); /* Adjust background color for smaller screens */
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .image-section {
+                height: 500px; /* Adjust the height for very small screens */
+            }
+
+       
+
+            .image-section .text-container {
+                transform: scale(0.8);
+                padding: 10px;
+                background: rgba(0, 0, 0, 0.3); /* Further adjust background color */
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="image-section">
+        <div class="text-container">
+            <h1>Nye og brugte kontormøbler</h1>
+            <p>Hav af udvalg her hos KontorXpert</p>
+        </div>
+        <img src="~/images/designImages/xpertbillede2.jpg" alt="Image">
+    </div>
+</body>
+</html>

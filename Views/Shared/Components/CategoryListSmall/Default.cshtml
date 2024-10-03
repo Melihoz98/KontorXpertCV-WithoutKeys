@@ -1,0 +1,98 @@
+﻿@{
+    var categoriesGrouped = (Dictionary<string, List<ParentCategory>>)ViewBag.CategoriesGrouped;
+
+    // Helper function to create a valid ID
+    string SanitizeId(string key)
+    {
+        return key.Replace(' ', '-').Replace('_', '-').ToLower();
+    }
+}
+<div class="accordion" id="categoryAccordion">
+    @foreach (var group in categoriesGrouped)
+    {
+        var groupId = SanitizeId(group.Key);
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-@groupId">
+                <button class="accordion-button collapsed no-outline" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@groupId" aria-expanded="false" aria-controls="collapse-@groupId">
+                    @group.Key.ToUpper()
+                </button>
+            </h2>
+            <div id="collapse-@groupId" class="accordion-collapse collapse" aria-labelledby="heading-@groupId" data-bs-parent="#categoryAccordion">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        @foreach (var parentCategory in group.Value)
+                        {
+                            var parentCategoryId = SanitizeId(parentCategory.ParentCategoryName);
+                            <li class="list-group-item">
+                                <button class="btn btn-link no-outline no-underline" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@parentCategoryId" aria-expanded="false" aria-controls="collapse-@parentCategoryId">
+                                    <p style="color: black;">@parentCategory.ParentCategoryName.ToUpper()</p>
+                                </button>
+                                <div id="collapse-@parentCategoryId" class="collapse">
+                                    <ul class="list-group">
+                                        @foreach (var category in parentCategory.Categories)
+                                        {
+                                            <li class="list-group-item">
+                                                <a href="@Url.Action("Index", "Product", new { categoryID = category.CategoryID })" style="color: darkgreen; font-weight: 600;" class="no-underline">
+                                                    @category.CategoryName.ToUpper()
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .no-outline:focus,
+    .no-outline:active,
+    .btn-link:focus,
+    .btn-link:active {
+        outline: none;
+        box-shadow: none; /* Remove the box-shadow (often used for focus) */
+        background-color: transparent; /* Ensure the background color stays transparent */
+        color: inherit; /* Ensure the text color remains the same */
+    }
+
+    .no-underline {
+        text-decoration: none; /* Removes underline from links and buttons */
+    }
+
+        /* Optional: If you want to remove the underline when hovering */
+        .no-underline:hover {
+            text-decoration: none; /* Ensures the underline doesn't appear on hover */
+        }
+</style>
+<script>
+    $(document).ready(function () {
+        function adjustSearchBar() {
+            if ($(window).width() < 1200) {
+                $('.navbar-collapse form').addClass('d-block').removeClass('d-none');
+            } else {
+                $('.navbar-collapse form').addClass('d-none').removeClass('d-block');
+            }
+        }
+
+        function closeDropdownOnResize() {
+            if ($(window).width() >= 1271) {
+                $('#categoryMenu').collapse('hide'); // Hide the dropdown if screen width >= 1200px
+            }
+        }
+
+        // Run both functions on resize
+        $(window).resize(function () {
+            adjustSearchBar();
+            closeDropdownOnResize();
+        });
+
+        // Initial run on document ready
+        adjustSearchBar();
+        closeDropdownOnResize();
+    });
+
+</script>

@@ -1,0 +1,373 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Internal Styles -->
+    <style>
+     
+
+        .searchHeader {
+            text-align: center;
+            color: green;
+            margin-top: 70px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-family: 'Raleway', sans-serif;
+            color: green;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            margin-bottom: 0.5rem;
+            transition: transform 0.2s;
+            color: dimgrey;
+            font-family: "Playfair Display", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: regular;
+            text-transform: uppercase;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: darkslategrey;
+        }
+
+        .price-old {
+            font-size: 1rem;
+            color: grey;
+            text-decoration: line-through;
+        }
+
+        .dimension {
+            color: grey;
+            font-weight: lighter;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            color: black;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .badge:hover {
+            transform: scale(1.05);
+            cursor: default;
+        }
+
+        .position-absolute {
+            position: absolute;
+        }
+
+        .bottom-0 {
+            bottom: 0;
+        }
+
+        .start-0 {
+            left: 0;
+        }
+
+        .badge-on-image {
+            bottom: 8px;
+            left: 8px;
+            z-index: 1; /* Ensure badge is below icons */
+        }
+
+        .icon-button {
+            position: absolute;
+            bottom: 8px;
+            z-index: 0;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            pointer-events: auto; /* Ensure the button itself can be clicked */
+        }
+
+        .icon-button:hover {
+            transform: scale(1.2);
+        }
+
+        .icon-button svg {
+            fill: none;
+            stroke: black;
+            stroke-width: 2;
+        }
+
+        .heart-icon {
+            left: 58px; /* Adjust this value based on badge width and desired spacing */
+        }
+
+        .cart-icon {
+            left: 108px; /* Adjust this value based on badge width and desired spacing */
+        }
+
+        .green-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745; /* Green color */
+            border-radius: 50%; /* Make it round */
+            display: inline-block;
+            margin-right: 5px; /* Adjust spacing */
+        }
+
+        .yellow-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ffc107; /* Yellow color */
+            border-radius: 50%; /* Make it round */
+            display: inline-block;
+            margin-right: 5px; /* Adjust spacing */
+        }
+
+        .image-container {
+            position: relative;
+        }
+
+        .badge-red {
+            background-color: #d9d4d4;
+            font-size: 0.8rem;
+            color: black;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .discount-badge {
+            background-color: forestgreen; /* Green background */
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            top: 8px;
+            right: 8px;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <h2>@ViewData["Title"] @ViewBag.CategoryName</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+    {
+        <h1 class="searchHeader">Din søgning for "@ViewBag.SearchTerm" fandt @ViewBag.ProductCount produkter</h1>
+    }
+
+    <div class="category-list-container">
+    </div>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col">
+                    <div class="card-link position-relative d-block">
+                        <div class="card">
+                            @if (!string.IsNullOrEmpty(product.MainImageUrl))
+                            {
+                                <div class="image-container">
+                                    <a href="@Url.Action("ProductPage", "Product", new { id = product.ProductID })">
+                                        <img src="@product.MainImageUrl" class="card-img-top" alt="Product Image">
+                                    </a>
+                                    @if (product.Discount > 0)
+                                    {
+                                        <span class="discount-badge position-absolute">
+                                            @{
+                                                var formattedDiscount = product.Discount.ToString("F0"); // Remove decimals
+                                            }
+                                            -@formattedDiscount%
+                                        </span>
+                                    }
+                                    @if (product.IsUsed)
+                                    {
+                                        <!-- Additional content for used products -->
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-red position-absolute badge-on-image">NY</span>
+                                    }
+                                    <button class="icon-button heart-icon" data-product-id="@product.ProductID" onclick="event.preventDefault(); handleHeartClick(@product.ProductID)">
+                                        <!-- Heart Icon SVG -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                        </svg>
+                                    </button>
+                                    <button class="icon-button cart-icon" data-product-id="@product.ProductID" onclick="event.preventDefault(); handleCartClick(@product.ProductID)">
+                                        <!-- Cart Icon SVG -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M6 6h15l-1.68 9.39a2 2 0 01-1.98 1.61H8.66a2 2 0 01-1.97-1.61L4 4H1"></path>
+                                            <circle cx="9" cy="21" r="1"></circle>
+                                            <circle cx="19" cy="21" r="1"></circle>
+                                        </svg>
+                                    </button>
+                                </div>
+                            }
+                            <div class="card-body">
+                                <p class="card-text">@product.Brand</p>
+                                <h5 class="card-title">@product.Name <span class="dimension">@product.Dimensions</span></h5>
+                                <div class="price-container">
+                                    @if (product.Discount > 0)
+                                    {
+
+                                        var priceWithoutVAT = product.Price / 1.25m;
+                                        var discountedPrice = priceWithoutVAT * (1 - product.Discount / 100);
+
+                                        <span class="price" style="color: darkred;">@discountedPrice.ToString("C")</span>
+                                        <span class="price-old">@priceWithoutVAT.ToString("C")</span>
+                                    }
+                                    else
+                                    {
+
+                                        var priceWithoutVAT = product.Price / 1.25m;
+
+                                        <span class="price">@priceWithoutVAT.ToString("C")</span>
+                                    }
+                                </div>
+                                <p>
+                                    @if (product.StockQuantity > 0)
+                                    {
+                                        <span class="green-dot"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="yellow-dot"></span>
+                                    }
+                                    @product.StockQuantity på lager
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        function handleHeartClick(productId) {
+            fetch('/Favorite/AddToFavorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    productId: productId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Product added to favorites!');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function handleCartClick(productId) {
+            fetch('/ShoppingCart/AddToCartBtn', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    productId: productId,
+                    quantity: 1
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error('Network response was not ok: ' + JSON.stringify(errorData));
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Product added to cart!');
+                        location.reload();
+                    } else {
+                        console.error('There was a problem adding the product to the cart:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+    </script>
+</body>
+</html>

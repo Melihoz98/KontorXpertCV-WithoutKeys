@@ -1,0 +1,301 @@
+﻿@model List<WebKontorExpert.Models.Product>
+
+<div class="text-center">
+    <h1 class="display-4">Product Management</h1>
+</div>
+
+<div class="container">
+    <div class="text-right mb-3">
+        <!-- Button to open the modal for adding a new product -->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addProductModal">
+            Add New Product
+        </button>
+    </div>
+
+
+    <h2>Products</h2>
+
+    <!-- Table to display products -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Main Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Stock Quantity</th>
+                <th>Color</th>
+                <th>Dimensions</th>
+                <th>Category</th>
+                <th>Is Used</th>
+                <th>SKU</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductID</td>
+                    <td>
+                        <img src="@product.MainImageUrl" alt="@product.Name" class="img-fluid" style="max-width: 100px; height: auto;">
+                    </td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Brand</td>
+                    <td>@product.Price</td>
+                    <td>@(product.Discount.HasValue ? product.Discount.Value.ToString("C") : "None")</td> <!-- Display Discount -->
+
+                    <td>@product.StockQuantity</td>
+                    <td>@product.Color</td>
+                    <td>@product.Dimensions</td>
+                    <td>
+                        @{
+                            var categories = (List<Category>)ViewBag.Categories;
+                            var prodCategory = categories.FirstOrDefault(c => c.CategoryID == product.CategoryID);
+                            <text>@(prodCategory != null ? prodCategory.CategoryName : "Unknown")</text>
+                        }
+                    </td>
+                    <td>@(product.IsUsed.HasValue && product.IsUsed.Value ? "Yes" : "No")</td>
+                    <td>@product.SKU</td>
+
+                    <td>
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal-@product.ProductID">
+                            Edit
+                        </button>
+                        <!-- Delete Button -->
+                        <form asp-action="Delete" asp-controller="ProductManagement" asp-route-id="@product.ProductID" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="editModal-@product.ProductID" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-@product.ProductID" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel-@product.ProductID">Edit Product</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="Edit" asp-controller="ProductManagement" method="post" enctype="multipart/form-data">
+                                            <input type="hidden" name="ProductID" value="@product.ProductID" />
+
+                                            <!-- Product Details -->
+                                            <div class="form-group">
+                                                <label for="Name">Name</label>
+                                                <input type="text" class="form-control" name="Name" value="@product.Name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Description">Description</label>
+                                                <input type="text" class="form-control" name="Description" value="@product.Description" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Brand">Brand</label>
+                                                <input type="text" class="form-control" name="Brand" value="@product.Brand" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Price">Price</label>
+                                                <input type="text" class="form-control" name="Price" value="@product.Price" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Discount">Discount</label>
+                                                <input type="text" class="form-control" name="Discount" value="@(product.Discount.HasValue ? product.Discount.Value.ToString("F2") : "")" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="StockQuantity">Stock Quantity</label>
+                                                <input type="text" class="form-control" name="StockQuantity" value="@product.StockQuantity" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Color">Color</label>
+                                                <input type="text" class="form-control" name="Color" value="@product.Color" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Dimensions">Dimensions</label>
+                                                <input type="text" class="form-control" name="Dimensions" value="@product.Dimensions" />
+                                                <div class="form-group">
+                                                    <label for="CategoryID">Category</label>
+                                                    <select class="form-control" name="CategoryID">
+                                                        <option value="">Select Category</option>
+                                                        @foreach (var category in ViewBag.Categories)
+                                                        {
+                                                            int selectedCategoryId = ViewData["SelectedCategoryId"] != null ? (int)ViewData["SelectedCategoryId"] : -1;
+                                                            var isSelected = category.CategoryID == selectedCategoryId ? "selected" : "";
+                                                            string optionTag = $"<option value=\"{category.CategoryID}\" {isSelected}>{category.CategoryName}</option>";
+                                                            @Html.Raw(optionTag)
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                            <div class="form-group">
+                                                <label for="IsUsed">Is Used</label>
+                                                <select class="form-control" name="IsUsed">
+                                                    @{
+                                                        bool? isUsed = product.IsUsed;
+                                                    }
+                                                    <option value="true" selected="@(isUsed)">Yes</option>
+                                                    <option value="false" selected="@(!isUsed)">No</option>
+                                                </select>
+                                            </div>
+                                                <div class="form-group">
+                                                    <label for="SKU">SKU</label>
+                                                    <input type="text" class="form-control" name="SKU" value="@product.SKU" />
+                                                </div>
+
+                                            <!-- Existing Images -->
+                                            @if (product.Images != null && product.Images.Any())
+                                            {
+                                                <h4>Existing Images</h4>
+                                                <div class="row">
+                                                    @foreach (var image in product.Images)
+                                                    {
+                                                        <div class="col-md-3 mb-3">
+                                                            <img src="@image.ImageUrl" class="img-fluid" alt="Product Image">
+                                                            <div>
+                                                                <label><input type="checkbox" name="DeleteImages" value="@image.ImageID" /> Delete Image</label>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+
+                                            <!-- Main Image Upload -->
+                                            <div class="form-group">
+                                                <label for="MainImage">Main Image</label>
+                                                <input type="file" class="form-control-file" name="MainImage" />
+                                            </div>
+
+                                            <!-- Additional Images Upload -->
+                                            <div class="form-group">
+                                                <label for="ImageFiles">Additional Images</label>
+                                                <input type="file" class="form-control-file" name="ImageFiles" multiple />
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for adding a new product -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" asp-controller="ProductManagement" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" name="Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Description">Description</label>
+                        <input type="text" class="form-control" name="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Brand">Brand</label>
+                        <input type="text" class="form-control" name="Brand" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Price">Price</label>
+                        <input type="text" class="form-control" name="Price" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Discount">Discount</label>
+                        <input type="text" class="form-control" name="Discount" />
+                    </div>
+                    <div class="form-group">
+                        <label for="StockQuantity">Stock Quantity</label>
+                        <input type="text" class="form-control" name="StockQuantity" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Color">Color</label>
+                        <input type="text" class="form-control" name="Color" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Dimensions">Dimensions</label>
+                        <input type="text" class="form-control" name="Dimensions" />
+                    </div>
+                    <div class="form-group">
+                        <label for="SKU">SKU nummer</label>
+                        <input type="text" class="form-control" name="SKU" />
+                    </div>
+                    <div class="form-group">
+                        <label for="CategoryID">Category</label>
+                        <select class="form-control" name="CategoryID">
+                            <option value="">Select Category</option>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                int selectedCategoryId = ViewData["SelectedCategoryId"] != null ? (int)ViewData["SelectedCategoryId"] : -1;
+                                var isSelected = category.CategoryID == selectedCategoryId ? "selected" : "";
+                                string optionTag = $"<option value=\"{category.CategoryID}\" {isSelected}>{category.CategoryName}</option>";
+                                @Html.Raw(optionTag)
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsUsed">Is Used</label>
+                        <select class="form-control" name="IsUsed">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="MainImage">Main Image</label>
+                        <input type="file" class="form-control" name="MainImage" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ImageFiles">Additional Images</label>
+                        <div id="createImageInputs">
+                            <input type="file" class="form-control mb-2" name="ImageFiles" />
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addCreateImageInput()">Add More Images</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add necessary scripts for Bootstrap modal -->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function addCreateImageInput() {
+            var createImageInputs = document.getElementById('createImageInputs');
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.className = 'form-control mb-2';
+            input.name = 'ImageFiles';
+            createImageInputs.appendChild(input);
+        }
+
+        function addEditImageInput(productId) {
+            var editImageInputs = document.getElementById('editImageInputs-' + productId);
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.className = 'form-control mb-2';
+            input.name = 'ImageFiles';
+            editImageInputs.appendChild(input);
+        }
+    </script>
+}
